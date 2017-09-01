@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    QRegularExpression re(R"((\S+)\:(\d+))");
+    QRegularExpression re(R"((\S+)?\:(\d+))");
     auto m = re.match(app.arguments().at(1));
     if (!m.hasMatch()) {
         qDebug() << "cannot parse" << app.arguments().at(1);
@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 
     QString host = m.captured(1);
     int port = m.captured(2).toInt();
+    if (host.isEmpty()) host= "localhost";
 
     QTcpSocket sock;
     auto connf = [&sock, host, port]() {
